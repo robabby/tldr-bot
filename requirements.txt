@@ -1,0 +1,5 @@
+discord.py
+python-dotenv
+transformers
+torch
+openai>=1.0.0
