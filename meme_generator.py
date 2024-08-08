@@ -38,7 +38,7 @@ def generate_meme(context):
     draw = ImageDraw.Draw(background)
     
     # Choose a font
-    font = ImageFont.truetype("arial.ttf", 36)
+    font = ImageFont.truetype("fonts/Roboto-Regular.ttf", 36)
     
     # Wrap the text
     wrapped_text = textwrap.wrap(meme_text, width=20)
