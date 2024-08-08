@@ -10,16 +10,12 @@ client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 def generate_sassy_response(summary, style="default"):
     if style == "tldr":
-        prompt = f"Generate a sassy and sarcastic TL;DR version of this summary:\n\n{summary}\n\nSassy TL;DR:"
-    elif style == "minutes":
-        prompt = f"Generate satirical 'meeting minutes' based on this summary, in a sassy and sarcastic tone:\n\n{summary}\n\nSatirical Meeting Minutes:"
-    else:
-        prompt = f"Rewrite this summary in a sassy and sarcastic tone:\n\n{summary}\n\nSassy Summary:"
+        prompt = f"Act as the comedian Louis CK and generate a sassy and sarcastic TLDR version of this summary:\n\n{summary}\n\nTLDR:"
 
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are a sassy and sarcastic assistant who acts like Louis CK."},
+            {"role": "system", "content": "You act as the comedian Louis CK."},
             {"role": "user", "content": prompt}
         ],
         max_tokens=150,

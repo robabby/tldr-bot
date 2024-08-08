@@ -5,6 +5,8 @@ import os
 from dotenv import load_dotenv
 from summarizer import summarize_text
 from sassy_generator import generate_sassy_response
+from meme_generator import generate_meme
+from io import BytesIO
 
 # Load environment variables
 load_dotenv()
@@ -23,19 +25,6 @@ async def on_ready():
         print(f"Synced {len(synced)} command(s)")
     except Exception as e:
         print(e)
-
-@bot.tree.command(name="summarize", description="Summarize the given text in a dick-ish tone")
-@app_commands.describe(text="The text to summarize")
-async def summarize(interaction: discord.Interaction, text: str):
-    await interaction.response.defer()
-    
-    # Generate summary
-    summary = summarize_text(text)
-
-    # Generate sassy response
-    sassy_summary = generate_sassy_response(summary)
-
-    await interaction.followup.send(f"Here's your sassy summary:\n\n{sassy_summary}")
 
 @bot.tree.command(name="tldr", description="Provide a shitty TL;DR of recent messages")
 async def tldr(interaction: discord.Interaction):
@@ -59,35 +48,38 @@ async def tldr(interaction: discord.Interaction):
         # Generate sassy response
         sassy_tldr = generate_sassy_response(summary, style="tldr")
 
-        await interaction.followup.send(f"TL;DR:\n\n{sassy_tldr}")
+        await interaction.followup.send(f"TLDR:\n\n{sassy_tldr}")
     except discord.errors.Forbidden:
         await interaction.followup.send("Oops! I don't have permission to read message history in this channel. Please ask an admin to grant me the 'Read Message History' permission.")
     except Exception as e:
         await interaction.followup.send(f"An error occurred while processing your request: {str(e)}")
 
-@bot.tree.command(name="minutes", description="Generate satirical 'meeting minutes' from recent messages")
-async def minutes(interaction: discord.Interaction):
+@bot.tree.command(name="meme", description="Generate a meme based on recent conversations")
+async def meme(interaction: discord.Interaction):
     await interaction.response.defer()
     
     try:
-        # Get the last 50 messages in the channel
+        # Get the last 10 messages in the channel
         messages = []
-        async for message in interaction.channel.history(limit=50):
-            messages.append(f"{message.author.name}: {message.content}")
+        async for message in interaction.channel.history(limit=10):
+            messages.append(message.content)
         
         if not messages:
-            await interaction.followup.send("No recent messages found to summarize.")
+            await interaction.followup.send("No recent messages found to generate a meme.")
             return
 
         text = "\n".join(messages)
 
-        # Generate summary
-        summary = summarize_text(text)
+        # Generate meme
+        meme_image = generate_meme(text)
 
-        # Generate sassy response
-        sassy_minutes = generate_sassy_response(summary, style="minutes")
-
-        await interaction.followup.send(f"Here are your 'professional' meeting minutes:\n\n{sassy_minutes}")
+        # Convert PIL Image to bytes
+        with BytesIO() as image_binary:
+            meme_image.save(image_binary, 'PNG')
+            image_binary.seek(0)
+            
+            # Send the meme as an attachment
+            await interaction.followup.send("Here's your meme based on recent conversations:", file=discord.File(fp=image_binary, filename='meme.png'))
     except discord.errors.Forbidden:
         await interaction.followup.send("Oops! I don't have permission to read message history in this channel. Please ask an admin to grant me the 'Read Message History' permission.")
     except Exception as e:
