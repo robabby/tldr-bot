@@ -44,7 +44,7 @@ def generate_meme(context):
     wrapped_text = textwrap.wrap(meme_text, width=20)
     
     # Calculate the total height of the text
-    line_height = font.getsize('hg')[1]  # This gets a good approximation of line height
+    line_height = font.getbbox('hg')[3] - font.getbbox('hg')[1]  # This gets a good approximation of line height
     text_height = len(wrapped_text) * line_height
     
     # Calculate the starting Y position to center the text vertically
@@ -52,7 +52,8 @@ def generate_meme(context):
     
     # Draw each line of text
     for line in wrapped_text:
-        line_width = font.getsize(line)[0]
+        bbox = font.getbbox(line)
+        line_width = bbox[2] - bbox[0]
         x_text = (background.width - line_width) / 2
         draw.text((x_text, y_text), line, font=font, fill="white", stroke_width=2, stroke_fill="black")
         y_text += line_height
