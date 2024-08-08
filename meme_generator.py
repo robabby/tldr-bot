@@ -37,21 +37,22 @@ def generate_meme(context):
     # Create a drawing object
     draw = ImageDraw.Draw(background)
     
-    # Choose a font
+    # Choose a font (make sure 'Roboto-Regular.ttf' is in your project directory)
     font = ImageFont.truetype("fonts/Roboto-Regular.ttf", 36)
     
     # Wrap the text
     wrapped_text = textwrap.wrap(meme_text, width=20)
     
     # Calculate the total height of the text
-    text_height = len(wrapped_text) * 40
+    line_height = font.getsize('hg')[1]  # This gets a good approximation of line height
+    text_height = len(wrapped_text) * line_height
     
     # Calculate the starting Y position to center the text vertically
     y_text = (background.height - text_height) / 2
     
     # Draw each line of text
     for line in wrapped_text:
-        line_width, line_height = draw.textsize(line, font=font)
+        line_width = font.getsize(line)[0]
         x_text = (background.width - line_width) / 2
         draw.text((x_text, y_text), line, font=font, fill="white", stroke_width=2, stroke_fill="black")
         y_text += line_height
