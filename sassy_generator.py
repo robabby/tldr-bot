@@ -13,7 +13,7 @@ def generate_sassy_response(summary, style="default"):
         prompt = f"Act as the comedian Louis CK and generate a sassy and sarcastic TLDR version of this summary:\n\n{summary}\n\nTLDR:"
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-5-nano",
         messages=[
             {"role": "system", "content": "You act as the comedian Louis CK."},
             {"role": "user", "content": prompt}
