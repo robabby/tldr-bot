@@ -13,7 +13,7 @@ client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 def generate_meme_text(context):
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-5-nano",
         messages=[
             {"role": "system", "content": "You are a meme generator. Create a short, funny meme caption based on the given context."},
             {"role": "user", "content": f"Context: {context}\n\nGenerate a meme caption:"}
